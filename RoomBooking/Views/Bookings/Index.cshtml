@@ -1,0 +1,42 @@
+﻿@model List<RoomBooking.Models.Booking>
+
+@{
+    ViewData["Title"] = "Bookings";
+}
+
+<h1>Bookings</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Booking</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Room</th>
+            <th>Organizer</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Attendees</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var booking in Model)
+        {
+            <tr>
+                <td>@booking.Room?.Name</td>
+                <td>@booking.OrganizerName</td>
+                <td>@booking.StartTime.ToString("g")</td>
+                <td>@booking.EndTime.ToString("g")</td>
+                <td>@booking.AttendeeCount</td>
+                <td>
+                    <form asp-action="Cancel" method="post" onsubmit="return confirm('Cancel this booking?');">
+                        <input type="hidden" name="id" value="@booking.Id" />
+                        <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

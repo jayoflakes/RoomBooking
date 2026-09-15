@@ -1,0 +1,38 @@
+﻿@model List<RoomBooking.Models.Booking>
+
+@{
+    var room = ViewBag.Room as RoomBooking.Models.Room;
+    var date = (DateTime)ViewBag.Date;
+    ViewData["Title"] = $"Bookings for {room?.Name}";
+}
+
+<h1>Bookings for @room?.Name — @date.ToString("d MMM yyyy")</h1>
+
+@if (!Model.Any())
+{
+    <p>No bookings for this room on this date.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Organizer</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Attendees</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var booking in Model)
+            {
+                <tr>
+                    <td>@booking.OrganizerName</td>
+                    <td>@booking.StartTime.ToString("t")</td>
+                    <td>@booking.EndTime.ToString("t")</td>
+                    <td>@booking.AttendeeCount</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

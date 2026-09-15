@@ -1,0 +1,50 @@
+﻿@model RoomBooking.Models.Booking
+
+@{
+    ViewData["Title"] = "Create Booking";
+    var rooms = ViewBag.Rooms as List<RoomBooking.Models.Room>;
+}
+
+<h1>Create Booking</h1>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="RoomId" class="form-label">Room</label>
+        <select asp-for="RoomId" class="form-control">
+            <option value="">-- Select a room --</option>
+            @foreach (var room in rooms!)
+            {
+                <option value="@room.Id">@room.Name (capacity @room.Capacity)</option>
+            }
+        </select>
+        <span asp-validation-for="RoomId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="OrganizerName" class="form-label"></label>
+        <input asp-for="OrganizerName" class="form-control" />
+        <span asp-validation-for="OrganizerName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="StartTime" class="form-label"></label>
+        <input asp-for="StartTime" class="form-control" type="datetime-local" />
+        <span asp-validation-for="StartTime" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="EndTime" class="form-label"></label>
+        <input asp-for="EndTime" class="form-control" type="datetime-local" />
+        <span asp-validation-for="EndTime" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="AttendeeCount" class="form-label"></label>
+        <input asp-for="AttendeeCount" class="form-control" />
+        <span asp-validation-for="AttendeeCount" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Booking</button>
+</form>

@@ -1,0 +1,35 @@
+﻿@model List<RoomBooking.Models.Room>
+
+@{
+    ViewData["Title"] = "Rooms";
+}
+
+<h1>Rooms</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Room</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Capacity</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var room in Model)
+        {
+            <tr>
+                <td>@room.Name</td>
+                <td>@room.Capacity</td>
+                <td>
+                    <a asp-controller="Bookings" asp-action="ForRoom" asp-route-roomId="@room.Id">
+                        View Bookings
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

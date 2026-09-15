@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="RoomBooking.Tests/RoomBooking.Tests.csproj" Id="8854ef1e-6f55-4689-a782-17a145ec5c06" />
+  <Project Path="RoomBooking/RoomBooking.csproj" />
+</Solution>

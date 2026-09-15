@@ -1,0 +1,59 @@
+﻿@model List<RoomBooking.Models.Room>
+
+@{
+    ViewData["Title"] = "Room Availability";
+    bool searchPerformed = ViewBag.SearchPerformed ?? false;
+}
+
+<h1>Find an Available Room</h1>
+
+<form method="get">
+    <div class="mb-3">
+        <label class="form-label">Date</label>
+        <input type="date" name="date" class="form-control" required />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Start time</label>
+        <input type="time" name="startTime" class="form-control" required />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">End time</label>
+        <input type="time" name="endTime" class="form-control" required />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Attendees</label>
+        <input type="number" name="attendeeCount" class="form-control" min="1" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+@if (searchPerformed)
+{
+    <hr />
+    <h2>Available Rooms</h2>
+
+    @if (!Model.Any())
+    {
+        <p>No rooms available for that time and group size.</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Capacity</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var room in Model)
+                {
+                    <tr>
+                        <td>@room.Name</td>
+                        <td>@room.Capacity</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
