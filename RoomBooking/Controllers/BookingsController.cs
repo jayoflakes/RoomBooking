@@ -53,15 +53,34 @@ namespace RoomBooking.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> CreateRecurring()
+        {
+            ViewBag.Rooms = await _context.Rooms.ToListAsync();
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateRecurring(Booking booking, int numberOfWeeks)
+        {
+            if (!ModelState.IsValid || numberOfWeeks < 1)
+            {
+                ViewBag.Rooms = await _context.Rooms.ToListAsync();
+                return View(booking);
+            }
+
+            var results = await _bookingService.CreateRecurringBookingAsync(booking, numberOfWeeks);
+
+            return View("RecurringResults", results);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Cancel(int id)
         {
-            var booking = await _context.Bookings.FindAsync(id);
+            var (success, errorMessage) = await _bookingService.CancelBookingAsync(id);
 
-            if (booking != null)
+            if (!success)
             {
-                _context.Bookings.Remove(booking);
-                await _context.SaveChangesAsync();
+                TempData["Error"] = errorMessage;
             }
 
             return RedirectToAction(nameof(Index));

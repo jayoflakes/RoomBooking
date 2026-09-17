@@ -180,6 +180,58 @@ namespace RoomBooking.Tests
             Assert.Equal("Free Room", availableRooms[0].Name);
         }
 
+        [Fact]
+        public async Task CancelBooking_Fails_WhenAlreadyStarted()
+        {
+            var context = CreateInMemoryContext();
+            context.Rooms.Add(new Room { Id = 1, Name = "Boardroom", Capacity = 10 });
+
+            var pastBooking = new Booking
+            {
+                Id = 1,
+                RoomId = 1,
+                OrganizerName = "Alice",
+                StartTime = DateTime.Now.AddHours(-2), // started 2 hours ago
+                EndTime = DateTime.Now.AddHours(-1),
+                AttendeeCount = 3
+            };
+            context.Bookings.Add(pastBooking);
+            await context.SaveChangesAsync();
+
+            var service = new BookingService(context);
+
+            var (success, errorMessage) = await service.CancelBookingAsync(1);
+
+            Assert.False(success);
+            Assert.Equal("This booking has already started and can no longer be cancelled.", errorMessage);
+        }
+
+        [Fact]
+        public async Task CancelBooking_Succeeds_WhenNotYetStarted()
+        {
+            var context = CreateInMemoryContext();
+            context.Rooms.Add(new Room { Id = 1, Name = "Boardroom", Capacity = 10 });
+
+            var futureBooking = new Booking
+            {
+                Id = 1,
+                RoomId = 1,
+                OrganizerName = "Alice",
+                StartTime = DateTime.Now.AddHours(2), // starts 2 hours from now
+                EndTime = DateTime.Now.AddHours(3),
+                AttendeeCount = 3
+            };
+            context.Bookings.Add(futureBooking);
+            await context.SaveChangesAsync();
+
+            var service = new BookingService(context);
+
+            var (success, errorMessage) = await service.CancelBookingAsync(1);
+
+            Assert.True(success);
+            Assert.Null(errorMessage);
+        }
+
     }
 
 }

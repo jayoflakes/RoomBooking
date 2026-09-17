@@ -86,6 +86,56 @@ namespace RoomBooking.Services
 
             return availableRooms;
         }
+        public async Task<(bool Success, string? ErrorMessage)> CancelBookingAsync(int bookingId)
+        {
+            var booking = await _context.Bookings.FindAsync(bookingId);
+
+            if (booking == null)
+            {
+                return (false, "Booking not found.");
+            }
+
+            if (booking.StartTime <= DateTime.Now)
+            {
+                return (false, "This booking has already started and can no longer be cancelled.");
+            }
+
+            _context.Bookings.Remove(booking);
+            await _context.SaveChangesAsync();
+
+            return (true, null);
+        }
+
+        public async Task<List<RecurringBookingResult>> CreateRecurringBookingAsync(Booking template, int numberOfWeeks)
+        {
+            var results = new List<RecurringBookingResult>();
+            var seriesId = Guid.NewGuid();
+
+            for (int week = 0; week < numberOfWeeks; week++)
+            {
+                var weeklyBooking = new Booking
+                {
+                    RoomId = template.RoomId,
+                    OrganizerName = template.OrganizerName,
+                    StartTime = template.StartTime.AddDays(week * 7),
+                    EndTime = template.EndTime.AddDays(week * 7),
+                    AttendeeCount = template.AttendeeCount,
+                    SeriesId = seriesId
+                };
+
+                var (success, errorMessage) = await CreateBookingAsync(weeklyBooking);
+
+                results.Add(new RecurringBookingResult
+                {
+                    WeekNumber = week + 1,
+                    StartTime = weeklyBooking.StartTime,
+                    Success = success,
+                    ErrorMessage = errorMessage
+                });
+            }
+
+            return results;
+        }
 
     }
 }

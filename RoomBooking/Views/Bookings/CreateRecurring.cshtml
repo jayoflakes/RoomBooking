@@ -1,0 +1,57 @@
+﻿@model RoomBooking.Models.Booking
+
+@{
+    ViewData["Title"] = "Create Recurring Booking";
+    var rooms = ViewBag.Rooms as List<RoomBooking.Models.Room>;
+}
+
+<h1>Create Recurring Booking</h1>
+
+<p>This creates the same booking once a week, for the number of weeks you choose. Each week is checked against the usual booking rules — some weeks may fail if there's a conflict, and you'll see a report after submitting.</p>
+
+<form asp-action="CreateRecurring" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="RoomId" class="form-label">Room</label>
+        <select asp-for="RoomId" class="form-control">
+            <option value="">-- Select a room --</option>
+            @foreach (var room in rooms!)
+            {
+                <option value="@room.Id">@room.Name (capacity @room.Capacity)</option>
+            }
+        </select>
+        <span asp-validation-for="RoomId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="OrganizerName" class="form-label"></label>
+        <input asp-for="OrganizerName" class="form-control" />
+        <span asp-validation-for="OrganizerName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="StartTime" class="form-label">First occurrence — start time</label>
+        <input asp-for="StartTime" class="form-control" type="datetime-local" />
+        <span asp-validation-for="StartTime" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="EndTime" class="form-label">First occurrence — end time</label>
+        <input asp-for="EndTime" class="form-control" type="datetime-local" />
+        <span asp-validation-for="EndTime" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="AttendeeCount" class="form-label"></label>
+        <input asp-for="AttendeeCount" class="form-control" />
+        <span asp-validation-for="AttendeeCount" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Number of weeks</label>
+        <input name="numberOfWeeks" type="number" min="1" max="52" value="4" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Recurring Booking</button>
+</form>

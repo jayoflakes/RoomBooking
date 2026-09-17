@@ -1,0 +1,48 @@
+﻿@model List<RoomBooking.Models.RecurringBookingResult>
+
+@{
+    ViewData["Title"] = "Recurring Booking Results";
+    int successCount = Model.Count(r => r.Success);
+    int failCount = Model.Count(r => !r.Success);
+}
+
+<h1>Recurring Booking Results</h1>
+
+<p>
+    @successCount out of @Model.Count occurrences were booked successfully.
+    @if (failCount > 0)
+    {
+        <text>@failCount could not be booked — see details below.</text>
+    }
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Week</th>
+            <th>Date/Time</th>
+            <th>Result</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model)
+        {
+            <tr class="@(result.Success ? "table-success" : "table-danger")">
+                <td>@result.WeekNumber</td>
+                <td>@result.StartTime.ToString("f")</td>
+                <td>
+                    @if (result.Success)
+                    {
+                        <span>✅ Booked</span>
+                    }
+                    else
+                    {
+                        <span>❌ @result.ErrorMessage</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Index" class="btn btn-primary">Back to Bookings</a>

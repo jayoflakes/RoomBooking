@@ -5,9 +5,13 @@
 }
 
 <h1>Bookings</h1>
-
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
 <p>
     <a asp-action="Create" class="btn btn-primary">Create New Booking</a>
+    <a asp-action="CreateRecurring" class="btn btn-secondary">Create Recurring Booking</a>
 </p>
 
 <table class="table">
