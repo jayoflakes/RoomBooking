@@ -2,6 +2,7 @@
 
 @{
     var room = ViewBag.Room as RoomBooking.Models.Room;
+    int roomId = ViewBag.RoomId;
     var date = (DateTime)ViewBag.Date;
     ViewData["Title"] = $"Bookings for {room?.Name}";
 
@@ -36,13 +37,8 @@
     .timeline-track {
         position: relative;
         flex-grow: 1;
-        height: @(totalMinutes)px;
-        background-image: repeating-linear-gradient(
-            to bottom,
-            #f5f5f5,
-            #f5f5f5 59px,
-            #eee 60px
-        );
+        height: @(totalMinutes) px;
+        background-image: repeating-linear-gradient( to bottom, #f5f5f5, #f5f5f5 59px, #eee 60px );
     }
 
     .booking-block {
@@ -57,7 +53,36 @@
         font-size: 0.85em;
         overflow: hidden;
     }
+
+    .date-nav {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+    }
 </style>
+
+<div class="date-nav">
+    <a class="btn btn-outline-secondary btn-sm"
+       asp-action="ForRoom"
+       asp-route-roomId="@roomId"
+       asp-route-date="@date.AddDays(-1).ToString("yyyy-MM-dd")">
+        &laquo; Previous Day
+    </a>
+
+    <form method="get" asp-action="ForRoom" class="d-flex align-items-center gap-2">
+        <input type="hidden" name="roomId" value="@roomId" />
+        <input type="date" name="date" value="@date.ToString("yyyy-MM-dd")" class="form-control form-control-sm" />
+        <button type="submit" class="btn btn-primary btn-sm">Go</button>
+    </form>
+
+    <a class="btn btn-outline-secondary btn-sm"
+       asp-action="ForRoom"
+       asp-route-roomId="@roomId"
+       asp-route-date="@date.AddDays(1).ToString("yyyy-MM-dd")">
+        Next Day &raquo;
+    </a>
+</div>
 
 @if (!Model.Any())
 {

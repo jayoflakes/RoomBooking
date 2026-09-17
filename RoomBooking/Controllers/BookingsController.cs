@@ -102,6 +102,7 @@ namespace RoomBooking.Controllers
                 .ToListAsync();
 
             ViewBag.Room = room;
+            ViewBag.RoomId = roomId;
             ViewBag.Date = targetDate;
 
             return View(bookings);
